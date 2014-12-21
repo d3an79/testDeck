@@ -1,26 +1,64 @@
 ---
-title       : Test deck
-subtitle    : 
-author      : 
+title       : My app presentation
+subtitle    : Random number exploratory statistics
+author      : Dean
 job         : 
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      # 
 widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+
+--- 
+  
+    
+## Newcomers to statistics often get confused between the descriptive terms used to summarise and explain sets of values.
+
 ---
 
-## Read-And-Delete
+### This app will produce a user defined amount of random numbers, plot their values and give numeric definitions of the:  
+  
+### 1. Mean  
+### 2. Median  
+### 3. Lower interquartile  
+### 4. Upper interquartile  
+### 5. Interquartile range  
+### 6. Standard deviation  
 
-1. Edit YAML front matter
-2. Write using R Markdown
-3. Use an empty line followed by three dashes to separate slides!
+---
 
---- .class #id 
+### Example:  
 
-## Slide 2
+### If 100 random values are generated with a mean of ~10 and a standard deviation of ~2 Then the following outputs could be displayed  
 
-```{r, fig.height=5, fig.width=5}
-plot(1 : 10, 1 : 10)
+```{r echo=FALSE}
+values <- rnorm(100, 10, 2)
+paste("Mean =", round(mean(values),2))
+paste("Median =", round(median(values),2))
+paste("Lower quartile value =", round(quantile(values, .25),2))
+paste("Upper quartile value =", round(quantile(values, .75),2))
+paste("Interquartile range =", round(IQR(values),2))
+paste("Standard deviation =", round(sd(values),2))
 ```
 
+---
+
+### The accompanying plot will also show the values marked as vertical lines
+
+```{r echo=FALSE, warning=FALSE}
+require(ggplot2)
+values <- rnorm(100, 10, 2)
+vals <- data.frame(values)
+
+  ggplot(vals, aes(x=values)) + 
+        geom_histogram(binwidth= 0.5, colour="black", fill="white") +
+           geom_vline(aes(xintercept=mean(values, na.rm=T)),
+                     colour="red", linetype="dashed", size=1) +
+         geom_vline(aes(xintercept=median(values, na.rm=T)),
+                   colour="blue", linetype="dashed", size=1) +
+         geom_vline(aes(xintercept= quantile(values, .25)),
+                   colour="green", linetype="dashed", size=1) +
+         geom_vline(aes(xintercept=quantile(values, .75)),
+                   colour="green", linetype="dashed", size=1) 
+```
